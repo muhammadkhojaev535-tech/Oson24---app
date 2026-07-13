@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="tg">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Осон24 — Бозори боэътимоди тоҷикон</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;600;700;800&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#151A32;
+    --navy-2:#1E2646;
+    --indigo:#4F46E5;
+    --indigo-2:#7C74F0;
+    --violet:#8B7CF6;
+    --teal:#14B8A6;
+    --coral:#FF6B45;
+    --bg:#F6F7FB;
+    --card:#FFFFFF;
+    --text:#1B1E2B;
+    --muted:#767C94;
+    --line:#E7E9F2;
+    --radius:16px;
+    --shadow:0 12px 32px -14px rgba(21,26,50,0.22);
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Inter',system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased;
+    padding-bottom:74px; /* фазо барои баннери собити поён */
+  }
+  h1,h2,h3,.display{
+    font-family:'Unbounded',system-ui,sans-serif;
+    font-weight:700;
+    letter-spacing:-0.01em;
+  }
+  .mono{font-family:'JetBrains Mono',monospace;}
+  a{color:inherit;text-decoration:none;}
+  button{font-family:inherit;cursor:pointer;}
+  :focus-visible{outline:3px solid var(--indigo);outline-offset:2px;border-radius:6px;}
+
+  .grad-divider{
+    height:3px;
+    background:linear-gradient(90deg,var(--indigo) 0%,var(--violet) 45%,var(--teal) 100%);
+  }
+  .pulse-dot{position:relative;width:9px;height:9px;border-radius:999px;background:var(--teal);flex-shrink:0;}
+  .pulse-dot::after{
+    content:'';position:absolute;inset:-4px;border-radius:999px;border:2px solid var(--teal);
+    animation:pulse 2s ease-out infinite;
+  }
+  @keyframes pulse{0%{transform:scale(.6);opacity:.9;}100%{transform:scale(1.8);opacity:0;}}
+
+  /* ---------- utility bar ---------- */
+  .util-bar{
+    background:var(--navy); color:#C7CBE0; font-size:12.5px; padding:7px 24px;
+    display:flex; justify-content:space-between; align-items:center;
+  }
+  .util-bar .trust{display:flex;gap:16px;align-items:center;opacity:0.95;}
+  .util-bar .trust span{display:flex;align-items:center;gap:5px;}
+  .lang-switch{display:flex;gap:10px;}
+  .lang-switch button{background:none;border:none;color:#9098BB;font-size:12.5px;padding:2px 4px;}
+  .lang-switch button.active{color:#fff;font-weight:700;}
+
+  /* ---------- header ---------- */
+  header.main{background:var(--navy); padding:16px 24px 18px;}
+  .header-row{display:flex;align-items:center;gap:20px;max-width:1240px;margin:0 auto;}
+  .menu-btn{
+    width:42px;height:42px;border-radius:12px;border:1px solid #2C3560;background:transparent;
+    color:#F1F2FA;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .15s;
+  }
+  .menu-btn:hover{background:#232C52;}
+  .logo{display:flex;align-items:center;gap:11px;flex-shrink:0;}
+  .logo-mark{
+    width:40px;height:40px;border-radius:12px;
+    background:linear-gradient(150deg,var(--indigo) 0%,var(--violet) 55%,var(--teal) 130%);
+    display:flex;align-items:center;justify-content:center;position:relative;
+    box-shadow:0 6px 16px -4px rgba(79,70,229,0.55);
+  }
+  .logo-mark svg{width:20px;height:20px;}
+  .logo-mark .dot{position:absolute;top:-3px;right:-3px;}
+  .logo-word{color:#FFFFFF;font-size:20px;line-height:1;letter-spacing:-0.02em;}
+  .logo-word em{font-style:normal;color:var(--teal);}
+  .search-wrap{flex:1;position:relative;max-width:520px;}
+  .search-wrap input{width:100%;padding:12px 46px 12px 16px;border-radius:12px;border:none;background:#232C52;color:#F1F2FA;font-size:14.5px;}
+  .search-wrap input::placeholder{color:#8B92B8;}
+  .search-wrap svg{position:absolute;right:16px;top:50%;transform:translateY(-50%);}
+  .header-icons{display:flex;gap:6px;flex-shrink:0;}
+  .icon-btn{
+    width:42px;height:42px;border-radius:12px;border:1px solid #2C3560;background:transparent;color:#F1F2FA;
+    display:flex;align-items:center;justify-content:center;position:relative;transition:background .15s ease;
+  }
+  .icon-btn:hover{background:#232C52;}
+  .icon-btn .badge{position:absolute;top:-4px;right:-4px;background:var(--coral);color:#fff;font-size:10px;font-weight:700;border-radius:999px;padding:1px 5px;}
+
+  /* ---------- side menu drawer ---------- */
+  .menu-overlay{position:fixed;inset:0;background:rgba(21,26,50,.45);z-index:80;opacity:0;pointer-events:none;transition:opacity .25s ease;}
+  .menu-overlay.show{opacity:1;pointer-events:auto;}
+  .menu-drawer{
+    position:fixed;top:0;left:0;bottom:0;width:320px;max-width:88vw;background:#fff;z-index:90;
+    transform:translateX(-100%);transition:transform .28s ease;display:flex;flex-direction:column;
+    box-shadow:18px 0 40px rgba(0,0,0,.18);
+  }
+  .menu-drawer.open{transform:translateX(0);}
+  .menu-head{
+    background:linear-gradient(135deg,var(--navy) 0%,var(--navy-2) 100%);color:#fff;padding:22px 20px;
+    position:relative;
+  }
+  .menu-head .logo-word{font-size:19px;}
+  .menu-close{position:absolute;top:16px;right:16px;background:rgba(255,255,255,.1);border:none;color:#fff;width:32px;height:32px;border-radius:9px;font-size:16px;}
+  .menu-user{display:flex;align-items:center;gap:10px;margin-top:16px;font-size:12.5px;color:#B3B9DA;}
+  .menu-user .av{width:34px;height:34px;border-radius:999px;background:var(--indigo);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;}
+  .menu-body{flex:1;overflow-y:auto;padding:8px 0 20px;}
+  .menu-section-label{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:700;padding:16px 20px 8px;}
+  .menu-link{
+    display:flex;align-items:center;gap:13px;padding:12px 20px;font-size:14.5px;font-weight:600;color:var(--text);
+    transition:background .15s;
+  }
+  .menu-link:hover{background:#F6F7FB;}
+  .menu-link .ic{
+    width:36px;height:36px;border-radius:10px;background:#F0F1F8;display:flex;align-items:center;justify-content:center;
+    color:var(--indigo);flex-shrink:0;
+  }
+  .other-apps{padding:6px 14px 4px;}
+  .app-card{
+    display:flex;align-items:center;gap:12px;padding:11px 12px;border-radius:12px;border:1px solid var(--line);
+    margin-bottom:8px;transition:border-color .15s, background .15s;
+  }
+  .app-card:hover{border-color:var(--indigo);background:#F8F8FF;}
+  .app-card .app-icon{
+    width:42px;height:42px;border-radius:11px;flex-shrink:0;display:flex;align-items:center;justify-content:center;
+    color:#fff;font-weight:800;font-size:14px;
+  }
+  .app-card .app-name{font-size:13.5px;font-weight:700;color:var(--text);}
+  .app-card .app-desc{font-size:11.5px;color:var(--muted);margin-top:1px;}
+  .app-card .go{margin-left:auto;color:var(--muted);flex-shrink:0;}
+  .add-app-link{
+    display:flex;align-items:center;justify-content:center;gap:7px;margin:6px 6px 0;padding:11px;
+    border:1.5px dashed var(--line);border-radius:12px;font-size:12.5px;color:var(--muted);font-weight:600;
+  }
+
+  /* ---------- category facets ---------- */
+  .facets{background:#FFFFFF;border-bottom:1px solid var(--line);padding:14px 24px;}
+  .facet-row{max-width:1240px;margin:0 auto;display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:8px;}
+  .facet-row:last-child{margin-bottom:0;}
+  .facet-label{font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:700;min-width:150px;}
+  .chip{border:1.5px solid var(--line);background:#fff;color:var(--text);padding:7px 14px;border-radius:10px;font-size:13.5px;display:flex;align-items:center;gap:6px;transition:all .15s ease;}
+  .chip:hover{border-color:var(--indigo);}
+  .chip.active{background:var(--indigo);border-color:var(--indigo);color:#fff;}
+  .chip.active.type2{background:var(--teal);border-color:var(--teal);}
+
+  /* ---------- hero ---------- */
+  .hero{max-width:1240px;margin:36px auto 8px;padding:0 24px;display:grid;grid-template-columns:1.1fr 0.9fr;gap:36px;align-items:center;}
+  .hero h1{font-size:36px;line-height:1.18;margin:0 0 14px;color:var(--navy);}
+  .hero h1 em{font-style:normal;color:var(--indigo);}
+  .hero p{color:#54586C;font-size:15.5px;line-height:1.65;max-width:460px;margin:0 0 22px;}
+  .cta-row{display:flex;gap:12px;margin-bottom:24px;}
+  .btn-primary{background:var(--indigo);color:#fff;border:none;padding:13px 22px;border-radius:12px;font-weight:700;font-size:14px;box-shadow:0 10px 22px -8px rgba(79,70,229,0.55);}
+  .btn-ghost{background:transparent;border:1.5px solid #D6D9E6;color:var(--navy);padding:13px 20px;border-radius:12px;font-weight:600;font-size:14px;}
+  .trust-row{display:flex;gap:20px;flex-wrap:wrap;}
+  .trust-item{display:flex;align-items:center;gap:7px;font-size:12px;color:#54586C;font-weight:600;}
+  .trust-item svg{color:var(--teal);flex-shrink:0;}
+  .hero-visual{position:relative;border-radius:22px;overflow:hidden;background:linear-gradient(150deg,var(--navy) 0%,#232C52 60%,#2E3970 100%);aspect-ratio:4/3;box-shadow:var(--shadow);}
+  .hero-visual::before{content:'';position:absolute;width:260px;height:260px;border-radius:999px;background:radial-gradient(circle,rgba(139,124,246,0.55),transparent 70%);top:-60px;right:-60px;filter:blur(10px);}
+  .hero-visual::after{content:'';position:absolute;width:220px;height:220px;border-radius:999px;background:radial-gradient(circle,rgba(20,184,166,0.4),transparent 70%);bottom:-70px;left:-40px;filter:blur(10px);}
+  .hero-visual .badge-float{position:absolute;bottom:18px;left:18px;background:rgba(255,255,255,0.97);border-radius:14px;padding:12px 16px;display:flex;gap:10px;align-items:center;box-shadow:0 10px 24px rgba(0,0,0,.22);z-index:2;}
+  .badge-float .dot{width:34px;height:34px;border-radius:12px;background:var(--indigo);display:flex;align-items:center;justify-content:center;color:#fff;}
+  .badge-float div div:first-child{font-weight:700;font-size:13px;color:var(--navy);}
+  .badge-float div div:last-child{font-size:11.5px;color:var(--muted);}
+  .hero-visual .live-tag{position:absolute;top:18px;left:18px;background:rgba(255,255,255,0.12);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,0.25);border-radius:999px;padding:6px 12px 6px 10px;display:flex;align-items:center;gap:7px;font-size:11px;color:#fff;font-weight:600;z-index:2;}
+
+  /* ---------- quick highlight icons ---------- */
+  .highlights{max-width:1240px;margin:40px auto 0;padding:0 24px;display:flex;gap:26px;}
+  .highlight{display:flex;flex-direction:column;align-items:center;gap:8px;}
+  .highlight .ring{
+    width:68px;height:68px;border-radius:999px;padding:2.5px;
+    background:linear-gradient(135deg,var(--indigo),var(--violet),var(--teal));
+  }
+  .highlight .ring .inner{
+    width:100%;height:100%;border-radius:999px;background:linear-gradient(150deg,#151A32,#232052);
+    display:flex;align-items:center;justify-content:center;color:#fff;
+  }
+  .highlight span{font-size:12px;font-weight:600;color:var(--text);}
+
+  /* ---------- products ---------- */
+  .section-title{max-width:1240px;margin:48px auto 16px;padding:0 24px;display:flex;justify-content:space-between;align-items:baseline;}
+  .section-title h2{font-size:22px;color:var(--navy);margin:0;}
+  .section-title a{font-size:13px;font-weight:700;color:var(--indigo);}
+
+  .grid{max-width:1240px;margin:0 auto;padding:0 24px 20px;display:grid;grid-template-columns:repeat(6,1fr);gap:14px;}
+  .card{
+    background:var(--card);border-radius:12px;overflow:hidden;border:1px solid var(--line);
+    transition:transform .16s ease, box-shadow .16s ease;display:flex;flex-direction:column;cursor:pointer;
+  }
+  .card:hover{transform:translateY(-3px);box-shadow:var(--shadow);border-color:transparent;}
+  .card-img{aspect-ratio:1/0.9;position:relative;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.85);font-size:10.5px;font-weight:600;}
+  .card-img .tag{position:absolute;top:7px;left:7px;background:rgba(255,255,255,.95);color:var(--navy);font-size:9px;font-weight:700;padding:3px 7px;border-radius:6px;}
+  .card-img .fav{position:absolute;top:7px;right:7px;width:24px;height:24px;border-radius:8px;background:rgba(255,255,255,.95);border:none;display:flex;align-items:center;justify-content:center;color:var(--coral);font-size:12px;}
+  .card-body{padding:9px 10px 11px;display:flex;flex-direction:column;gap:5px;flex:1;}
+  .card-cat{font-size:9px;color:var(--teal);font-weight:700;text-transform:uppercase;letter-spacing:.03em;}
+  .card-title{font-size:12px;font-weight:600;line-height:1.3;color:var(--text);min-height:31px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+  .card-rating{display:flex;align-items:center;gap:4px;font-size:10.5px;color:var(--muted);}
+  .card-rating svg{color:#F5A524;width:10px;height:10px;}
+  .card-price-row{display:flex;justify-content:space-between;align-items:center;margin-top:1px;}
+  .card-price{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:13.5px;color:var(--navy);}
+  .card-old-price{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);text-decoration:line-through;margin-left:4px;}
+  .card-footer{display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--line);padding-top:7px;margin-top:2px;}
+  .seller{display:flex;align-items:center;gap:4px;font-size:9.5px;color:#54586C;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .seller .verified{color:var(--teal);flex-shrink:0;}
+  .chat-btn{display:flex;align-items:center;gap:4px;background:var(--navy);color:#fff;border:none;padding:5px 8px;border-radius:8px;font-size:10px;font-weight:600;flex-shrink:0;}
+  .chat-btn:hover{background:var(--navy-2);}
+
+  /* ---------- footer ---------- */
+  footer{background:var(--navy);color:#B3B9DA;margin-top:56px;padding:36px 24px 22px;}
+  .footer-inner{max-width:1240px;margin:0 auto;display:flex;justify-content:space-between;flex-wrap:wrap;gap:24px;}
+  .footer-inner p{font-size:12px;line-height:1.7;color:#9298BE;max-width:340px;}
+  footer .cols{display:flex;gap:56px;flex-wrap:wrap;}
+  footer .col h4{color:#F1F2FA;font-size:12.5px;margin:0 0 12px;}
+  footer .col a{display:block;font-size:12px;color:#9298BE;margin-bottom:8px;}
+  .footer-bottom{max-width:1240px;margin:24px auto 0;padding-top:16px;border-top:1px solid #29316052;font-size:11px;color:#7A81A8;display:flex;justify-content:space-between;}
+
+  /* ---------- BOTTOM ad banner (на гӯша, балки навори поёни хурд) ---------- */
+  .ad-banner-bottom{
+    position:fixed;left:0;right:0;bottom:0;z-index:40;
+    background:linear-gradient(90deg,var(--navy) 0%,#232C52 100%);
+    border-top:1px solid #2C3560;
+    padding:9px 16px;display:flex;align-items:center;gap:12px;
+    transition:transform .25s ease;
+  }
+  .ad-banner-bottom.hidden{transform:translateY(100%);}
+  .ad-banner-bottom .ad-tag{
+    background:linear-gradient(120deg,var(--indigo),var(--violet));color:#fff;font-size:9.5px;font-weight:800;
+    text-transform:uppercase;letter-spacing:.05em;padding:4px 8px;border-radius:6px;flex-shrink:0;
+  }
+  .ad-banner-bottom .ad-thumb{width:34px;height:34px;border-radius:8px;background:linear-gradient(135deg,var(--teal),#5DD6C6);flex-shrink:0;}
+  .ad-banner-bottom .ad-text{flex:1;min-width:0;}
+  .ad-banner-bottom .ad-text .t1{font-size:12.5px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .ad-banner-bottom .ad-text .t2{font-size:11px;color:#9AA3C4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .ad-banner-bottom .ad-cta{background:var(--indigo);color:#fff;border:none;padding:8px 14px;border-radius:9px;font-size:12px;font-weight:700;flex-shrink:0;}
+  .ad-banner-bottom .ad-x{background:none;border:none;color:#8B92B8;font-size:16px;padding:4px 6px;flex-shrink:0;}
+
+  /* ---------- chat drawer ---------- */
+  .overlay{position:fixed;inset:0;background:rgba(21,26,50,.35);z-index:60;opacity:0;pointer-events:none;transition:opacity .25s ease;}
+  .overlay.show{opacity:1;pointer-events:auto;}
+  .chat-drawer{position:fixed;top:0;right:0;bottom:0;width:380px;max-width:92vw;background:#fff;z-index:70;transform:translateX(100%);transition:transform .28s ease;display:flex;flex-direction:column;box-shadow:-18px 0 40px rgba(0,0,0,.18);}
+  .chat-drawer.open{transform:translateX(0);}
+  .chat-head{background:var(--navy);color:#fff;padding:16px 18px;position:relative;overflow:hidden;}
+  .chat-head-row{display:flex;align-items:center;gap:12px;}
+  .chat-avatar{width:40px;height:40px;border-radius:12px;background:var(--indigo);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;}
+  .chat-head-name{font-weight:700;font-size:14.5px;}
+  .chat-head-sub{font-size:11.5px;color:#B3B9DA;display:flex;align-items:center;gap:5px;}
+  .chat-close{position:absolute;top:14px;right:14px;background:none;border:none;color:#fff;font-size:18px;}
+  .privacy-note{background:#EEFBF8;color:#0E9285;font-size:11.5px;padding:9px 16px;display:flex;align-items:center;gap:7px;border-bottom:1px solid var(--line);font-weight:600;}
+  .chat-body{flex:1;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:12px;background:#F6F7FB;}
+  .bubble{max-width:78%;padding:10px 13px;border-radius:14px;font-size:13.5px;line-height:1.5;}
+  .bubble.them{background:#fff;border:1px solid var(--line);border-bottom-left-radius:4px;align-self:flex-start;}
+  .bubble.me{background:var(--indigo);color:#fff;border-bottom-right-radius:4px;align-self:flex-end;}
+  .bubble.attach{display:flex;align-items:center;gap:8px;}
+  .bubble .time{display:block;font-size:10px;opacity:.65;margin-top:4px;}
+  .chat-input{display:flex;gap:8px;padding:14px;border-top:1px solid var(--line);background:#fff;align-items:center;}
+  .chat-input button.icon{background:#F0F1F8;border:none;width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;color:var(--navy);flex-shrink:0;}
+  .chat-input input{flex:1;border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:13.5px;}
+  .chat-input button.send{background:var(--indigo);border:none;width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;flex-shrink:0;}
+
+  /* ---------- product detail modal ---------- */
+  .pmodal-overlay{position:fixed;inset:0;background:rgba(21,26,50,.55);z-index:95;opacity:0;pointer-events:none;transition:opacity .22s ease;display:flex;align-items:flex-end;justify-content:center;}
+  .pmodal-overlay.show{opacity:1;pointer-events:auto;}
+  .pmodal{
+    background:#fff;border-radius:22px 22px 0 0;width:100%;max-width:640px;max-height:88vh;overflow-y:auto;
+    transform:translateY(30px);transition:transform .28s ease;
+  }
+  .pmodal-overlay.show .pmodal{transform:translateY(0);}
+  @media (min-width:720px){
+    .pmodal-overlay{align-items:center;}
+    .pmodal{border-radius:22px;}
+  }
+  .pmodal-img{aspect-ratio:16/9;position:relative;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.85);font-size:13px;font-weight:600;}
+  .pmodal-close{position:absolute;top:14px;right:14px;width:34px;height:34px;border-radius:10px;background:rgba(255,255,255,.92);border:none;display:flex;align-items:center;justify-content:center;color:var(--navy);font-size:16px;}
+  .pmodal-body{padding:20px 22px 26px;}
+  .pmodal-cat{font-size:11px;color:var(--teal);font-weight:700;text-transform:uppercase;letter-spacing:.04em;}
+  .pmodal-title{font-size:20px;margin:6px 0 8px;color:var(--navy);}
+  .pmodal-rating{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);margin-bottom:14px;}
+  .pmodal-rating svg{color:#F5A524;}
+  .pmodal-price-row{display:flex;align-items:baseline;gap:10px;margin-bottom:16px;}
+  .pmodal-price{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:26px;color:var(--navy);}
+  .pmodal-old{font-family:'JetBrains Mono',monospace;font-size:14px;color:var(--muted);text-decoration:line-through;}
+  .pmodal-desc{font-size:13.5px;line-height:1.7;color:#4B4F63;margin-bottom:18px;}
+  .pmodal-tags{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px;}
+  .pmodal-tags span{background:#F0F1F8;color:var(--navy);font-size:11.5px;font-weight:600;padding:5px 10px;border-radius:8px;}
+  .pmodal-seller{display:flex;align-items:center;justify-content:space-between;border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-bottom:18px;}
+  .pmodal-seller .who{display:flex;align-items:center;gap:10px;}
+  .pmodal-seller .av{width:38px;height:38px;border-radius:10px;background:var(--indigo);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;}
+  .pmodal-seller .name{font-size:13px;font-weight:700;color:var(--navy);display:flex;align-items:center;gap:5px;}
+  .pmodal-seller .stat{font-size:11.5px;color:var(--muted);}
+  .pmodal-actions{display:flex;gap:10px;}
+  .pmodal-actions .btn-cart{flex:1;background:var(--indigo);color:#fff;border:none;padding:14px;border-radius:12px;font-weight:700;font-size:14px;}
+  .pmodal-actions .btn-chat{width:52px;background:var(--navy);color:#fff;border:none;border-radius:12px;display:flex;align-items:center;justify-content:center;}
+
+  @media (max-width:980px){
+    .hero{grid-template-columns:1fr;}
+    .grid{grid-template-columns:repeat(3,1fr);}
+    .header-row{flex-wrap:wrap;}
+    .search-wrap{order:3;max-width:100%;flex-basis:100%;}
+    .highlights{overflow-x:auto;}
+  }
+  @media (max-width:600px){
+    .grid{grid-template-columns:repeat(2,1fr);gap:10px;}
+    .hero h1{font-size:26px;}
+  }
+  @media (prefers-reduced-motion: reduce){*{transition:none !important;animation:none !important;}}
+</style>
+</head>
+<body>
+
+<!-- ================= UTILITY BAR ================= -->
+<div class="util-bar">
+  <div class="trust">
+    <span><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 4 5v6c0 5 3.5 9 8 11 4.5-2 8-6 8-11V5l-8-3Z"/></svg>Пардохт бо рамзгузории пурра</span>
+    <span><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 12 2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>Фурӯшандагони тасдиқшуда</span>
+  </div>
+  <div class="lang-switch"><button class="active">ТҶ</button><button>РУ</button><button>EN</button></div>
+</div>
+
+<!-- ================= HEADER ================= -->
+<header class="main">
+  <div class="header-row">
+    <button class="menu-btn" onclick="openMenu()" aria-label="Кушодани меню">
+      <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+    </button>
+    <a class="logo" href="#" aria-label="Осон24 — саҳифаи асосӣ">
+      <span class="logo-mark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m4.5 12.5 3.2 3.2L19.5 5"/></svg>
+        <span class="dot pulse-dot"></span>
+      </span>
+      <span class="logo-word display">Осон<em>24</em></span>
+    </a>
+    <div class="search-wrap">
+      <input type="text" placeholder="Дар байни ҳазорон маҳсулот ҷустуҷӯ кунед…">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8B92B8" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+    </div>
+    <div class="header-icons">
+      <button class="icon-btn" aria-label="Дӯстдоштаҳо"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7.5-4.6-10-9.3C.4 8 2 4.5 5.6 4c2-.3 3.8.7 5 2.3 1.2-1.6 3-2.6 5-2.3C19.2 4.5 20.8 8 20 11.7 17.5 16.4 12 21 12 21Z"/></svg><span class="badge">3</span></button>
+      <button class="icon-btn" aria-label="Сабад"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1.4"/><circle cx="18" cy="21" r="1.4"/><path d="M2 3h2l2.6 12.4a2 2 0 0 0 2 1.6h8.8a2 2 0 0 0 2-1.6L21 7H6"/></svg><span class="badge">5</span></button>
+      <button class="icon-btn" aria-label="Профил"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c1.5-4 5-6 8-6s6.5 2 8 6"/></svg></button>
+    </div>
+  </div>
+</header>
+<div class="grad-divider"></div>
+
+<!-- ================= SIDE MENU: дигар барномаҳои мо ================= -->
+<div class="menu-overlay" id="menuOverlay" onclick="closeMenu()"></div>
+<div class="menu-drawer" id="menuDrawer">
+  <div class="menu-head">
+    <span class="logo-word display">Осон<em>24</em></span>
+    <button class="menu-close" onclick="closeMenu()" aria-label="Пӯшидан">✕</button>
+    <div class="menu-user">
+      <div class="av">Ф</div>
+      <div>Хуш омадед!<br><span style="opacity:.7">Ворид шавед ба ҳисоби худ</span></div>
+    </div>
+  </div>
+  <div class="menu-body">
+    <div class="menu-section-label">Саҳифаҳои асосӣ</div>
+    <a class="menu-link" href="#"><span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 10.5 12 3l9 7.5V21a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg></span>Саҳифаи асосӣ</a>
+    <a class="menu-link" href="#"><span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1.4"/><circle cx="18" cy="21" r="1.4"/><path d="M2 3h2l2.6 12.4a2 2 0 0 0 2 1.6h8.8a2 2 0 0 0 2-1.6L21 7H6"/></svg></span>Фармоишҳои ман</a>
+    <a class="menu-link" href="#"><span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7.5-4.6-10-9.3C.4 8 2 4.5 5.6 4c2-.3 3.8.7 5 2.3 1.2-1.6 3-2.6 5-2.3C19.2 4.5 20.8 8 20 11.7 17.5 16.4 12 21 12 21Z"/></svg></span>Дӯстдоштаҳо</a>
+    <a class="menu-link" href="#"><span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg></span>Танзимоти амният</a>
+
+    <div class="menu-section-label">Дигар барномаҳои мо</div>
+    <div class="other-apps">
+      <a class="app-card" href="#" data-app-link>
+        <div class="app-icon" style="background:linear-gradient(135deg,#4F46E5,#8B7CF6);">Д</div>
+        <div><div class="app-name">Осон24 Доставка</div><div class="app-desc">Барномаи курьерҳо</div></div>
+        <svg class="go" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+      </a>
+      <a class="app-card" href="#" data-app-link>
+        <div class="app-icon" style="background:linear-gradient(135deg,#14B8A6,#5DD6C6);">Ф</div>
+        <div><div class="app-name">Осон24 Фурӯшанда</div><div class="app-desc">Идораи дӯкони шумо</div></div>
+        <svg class="go" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+      </a>
+      <a class="app-card" href="#" data-app-link>
+        <div class="app-icon" style="background:linear-gradient(135deg,#FF6B45,#FF9270);">П</div>
+        <div><div class="app-name">Осон24 Пул</div><div class="app-desc">Ҳамён ва пардохтҳо</div></div>
+        <svg class="go" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+      </a>
+      <!-- Ҷои гузоштани линки барномаи нав: ба data-app-link href диҳед -->
+      <div class="add-app-link">+ Илова кардани барномаи нав</div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= FACETS ================= -->
+<div class="facets">
+  <div class="facet-row">
+    <span class="facet-label">Навъи маҳсулот</span>
+    <button class="chip active">Ҳама</button>
+    <button class="chip">Либос ва пойафзол</button>
+    <button class="chip">Электроника</button>
+    <button class="chip">Хӯрокворӣ</button>
+    <button class="chip">Лавозимоти хона</button>
+    <button class="chip">Гигиена ва зебоӣ</button>
+    <button class="chip">Бозичаҳо</button>
+  </div>
+  <div class="facet-row">
+    <span class="facet-label">Ҷои истифода</span>
+    <button class="chip type2 active">Ҳама ҷойҳо</button>
+    <button class="chip type2">Хона</button>
+    <button class="chip type2">Ошхона</button>
+    <button class="chip type2">Дафтар</button>
+    <button class="chip type2">Мактаб</button>
+    <button class="chip type2">Кӯча / боғ</button>
+    <button class="chip type2">Мошин</button>
+  </div>
+</div>
+
+<!-- ================= HERO ================= -->
+<section class="hero">
+  <div>
+    <h1 class="display">Харид дар <em>24</em> дақиқа — на дар 24 соат</h1>
+    <p>Аз ҳазорон фурӯшандаи тасдиқшуда маҳсулот харед, мустақим бо онҳо дар чати хусусӣ гуфтугӯ кунед ва фармоишро дар харита пайгирӣ намоед.</p>
+    <div class="cta-row">
+      <button class="btn-primary">Харидро оғоз кунед</button>
+      <button class="btn-ghost">Фурӯшанда шавед</button>
+    </div>
+    <div class="trust-row">
+      <div class="trust-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 4 5v6c0 5 3.5 9 8 11 4.5-2 8-6 8-11V5l-8-3Z"/></svg>Санҷиши ду-марҳилавӣ (2FA)</div>
+      <div class="trust-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>Паролҳо бо Argon2 ҳифз мешаванд</div>
+      <div class="trust-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 12 2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>Чати хусусии рамзгузоришуда</div>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <div class="live-tag"><span class="pulse-dot"></span>24/7 боздид ва пуштибонӣ</div>
+    <div class="badge-float">
+      <div class="dot"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2"><path d="m9 12 2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg></div>
+      <div><div>12,400+ фармоиш дар моҳ</div><div>дар саросари Тоҷикистон</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= HIGHLIGHTS ================= -->
+<div class="highlights">
+  <div class="highlight"><div class="ring"><div class="inner"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H8l-4 4V5a2 2 0 0 1 2-2h13a2 2 0 0 1 2 2z"/><path d="M12 9v3M12 15h.01" stroke="none"/></svg></div></div><span>Отзыв</span></div>
+  <div class="highlight"><div class="ring"><div class="inner"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8"><path d="M6 8V6a3 3 0 0 1 6 0v2M4 8h8v9a1.5 1.5 0 0 1-1.5 1.5h-5A1.5 1.5 0 0 1 4 17z"/></svg></div></div><span>Маҳсулот</span></div>
+  <div class="highlight"><div class="ring"><div class="inner"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8"><rect x="2" y="8" width="12" height="8" rx="1"/><path d="M14 11h4l3 3v2h-7z"/><circle cx="6.5" cy="17.5" r="1.4"/><circle cx="16.5" cy="17.5" r="1.4"/></svg></div></div><span>Доставка</span></div>
+  <div class="highlight"><div class="ring"><div class="inner"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8"><path d="M8 7h6l4-3v14l-4-3H8a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2Z"/><path d="M17 9c1 1 1 4 0 5"/></svg></div></div><span>Эълон</span></div>
+</div>
+
+<!-- ================= PRODUCTS ================= -->
+<div class="section-title"><h2 class="display">Пешниҳодҳои имрӯза</h2><a href="#">Ҳамаро бинед →</a></div>
+
+<div class="grid" id="productGrid"></div>
+
+<!-- ================= FOOTER ================= -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <a class="logo" href="#" style="margin-bottom:14px;">
+        <span class="logo-mark" style="width:32px;height:32px;border-radius:10px;"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="15" height="15"><path d="m4.5 12.5 3.2 3.2L19.5 5"/></svg></span>
+        <span class="logo-word display" style="font-size:16px;">Осон<em>24</em></span>
+      </a>
+      <p>Платформаи бозори электронии Тоҷикистон, ки харидорон, фурӯшандагон ва курьерҳоро дар як фазои бехатар мутаҳид мекунад.</p>
+    </div>
+    <div class="cols">
+      <div class="col"><h4>Ширкат</h4><a href="#">Дар бораи мо</a><a href="#">Вакансияҳо</a><a href="#">Тамос</a></div>
+      <div class="col"><h4>Барои фурӯшанда</h4><a href="#">Сабти дӯкон</a><a href="#">Қоидаҳо</a></div>
+      <div class="col"><h4>Амният</h4><a href="#">Сиёсати махфият</a><a href="#">2FA ва ҳифз</a></div>
+    </div>
+  </div>
+  <div class="footer-bottom"><span>© 2026 Осон24. Ҳамаи ҳуқуқҳо ҳифз шудаанд.</span><span>HTTPS · Argon2 · JWT · 2FA</span></div>
+</footer>
+
+<!-- ================= BOTTOM AD BANNER ================= -->
+<div class="ad-banner-bottom" id="adBanner">
+  <span class="ad-tag">Реклама</span>
+  <div class="ad-thumb"></div>
+  <div class="ad-text">
+    <div class="t1">Дӯконатонро дар Осон24 кушоед</div>
+    <div class="t2">Ба 40,000+ харидор дастрас шавед</div>
+  </div>
+  <button class="ad-cta">Оғоз кардан</button>
+  <button class="ad-x" onclick="document.getElementById('adBanner').classList.add('hidden')" aria-label="Пӯшидан">✕</button>
+</div>
+
+<!-- ================= CHAT DRAWER ================= -->
+<div class="overlay" id="overlay" onclick="closeChat()"></div>
+<div class="chat-drawer" id="chatDrawer">
+  <div class="chat-head">
+    <div class="chat-head-row">
+      <div class="chat-avatar" id="chatAvatar">Д</div>
+      <div><div class="chat-head-name" id="chatName">Фурӯшгоҳи «Дӯсти»</div>
+        <div class="chat-head-sub"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 2 4 5v6c0 5 3.5 9 8 11 4.5-2 8-6 8-11V5l-8-3Z"/></svg>Чати хусусӣ — фақат шумо ва фурӯшанда</div>
+      </div>
+    </div>
+    <button class="chat-close" onclick="closeChat()" aria-label="Пӯшидани чат">✕</button>
+  </div>
+  <div class="privacy-note"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>Паёмҳо танҳо ба шумо ва фурӯшанда дастрасанд</div>
+  <div class="chat-body">
+    <div class="bubble them">Салом! Хуш омадед, чӣ гуна метавонам кӯмак кунам?<span class="time">10:02</span></div>
+    <div class="bubble me">Салом, ин маҳсулот дар анбор ҳаст?<span class="time">10:03</span></div>
+    <div class="bubble them">Бале, имрӯз бор карда мешавад ✅<span class="time">10:04</span></div>
+  </div>
+  <div class="chat-input">
+    <button class="icon" aria-label="Илова кардани акс/файл"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.4 11.5 12.2 20.7a5 5 0 0 1-7-7l9-9a3.5 3.5 0 0 1 5 5l-9 9a2 2 0 0 1-3-3l8-8"/></svg></button>
+    <input type="text" placeholder="Паёми худро нависед…">
+    <button class="send" aria-label="Фиристодан"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m22 2-7 20-4-9-9-4Z"/></svg></button>
+  </div>
+</div>
+
+<!-- ================= PRODUCT DETAIL MODAL ================= -->
+<div class="pmodal-overlay" id="pmodalOverlay" onclick="if(event.target===this)closeProduct()">
+  <div class="pmodal">
+    <div class="pmodal-img" id="pmodalImg">
+      <button class="pmodal-close" onclick="closeProduct()" aria-label="Пӯшидан">✕</button>
+      Акси маҳсулот
+    </div>
+    <div class="pmodal-body">
+      <div class="pmodal-cat" id="pmodalCat">Лавозимоти хона</div>
+      <h3 class="pmodal-title" id="pmodalTitle">Дастгоҳи чойҷӯшони электрикӣ 1.7L</h3>
+      <div class="pmodal-rating">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 6.5 7 .8-5.2 4.8L18.2 21 12 17.3 5.8 21l1.4-6.9L2 8.3l7-.8L12 2Z"/></svg>
+        <span id="pmodalRating">4.8 · 236 шарҳ</span>
+      </div>
+      <div class="pmodal-price-row">
+        <span class="pmodal-price" id="pmodalPrice">245 сомонӣ</span>
+        <span class="pmodal-old" id="pmodalOld">310 сомонӣ</span>
+      </div>
+      <p class="pmodal-desc" id="pmodalDesc">
+        Дастгоҳи чойҷӯшони электрикии босифат бо ҷилди зиддиоксид, хомӯшкунии худкор ҳангоми ҷӯшидан ва тарҳи фишурда барои ҳар ошхона. Гарантия — 12 моҳ.
+      </p>
+      <div class="pmodal-tags">
+        <span>✔ Кафолати 12 моҳ</span>
+        <span>🚚 Расониши ройгон</span>
+        <span>↩ Баргардонидан то 7 рӯз</span>
+      </div>
+      <div class="pmodal-seller">
+        <div class="who">
+          <div class="av" id="pmodalAv">Д</div>
+          <div><div class="name" id="pmodalSeller">Фурӯшгоҳи «Дӯсти» <span class="verified" style="color:var(--teal);">✔</span></div><div class="stat">98% баҳои мусбат · 1,240 фурӯш</div></div>
+        </div>
+      </div>
+      <div class="pmodal-actions">
+        <button class="btn-cart">Ба сабад илова кардан</button>
+        <button class="btn-chat" onclick="closeProduct();openChat(document.getElementById('pmodalSeller').textContent.trim(),'Д')" aria-label="Чат бо фурӯшанда">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H8l-4 4V5a2 2 0 0 1 2-2h13a2 2 0 0 1 2 2z"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const DEMO_PRODUCTS = [
+    {tag:"Хона", cat:"Лавозимоти хона", title:"Дастгоҳи чойҷӯшони электрикӣ 1.7L", rating:"4.8 · 236 шарҳ", price:"245 сомонӣ", old:"310 сомонӣ", seller:"Фурӯшгоҳи «Дӯсти»", av:"Д", grad:"linear-gradient(150deg,#232C52,#3D4A85)", desc:"Дастгоҳи чойҷӯшони электрикии босифат бо ҷилди зиддиоксид, хомӯшкунии худкор ҳангоми ҷӯшидан ва тарҳи фишурда барои ҳар ошхона. Гарантия — 12 моҳ."},
+    {tag:"Кӯча", cat:"Либос ва пойафзол", title:"Куртаи зимистонии мардона, обногузар", rating:"4.9 · 512 шарҳ", price:"560 сомонӣ", old:null, seller:"«Либоси Шарқ»", av:"Л", grad:"linear-gradient(150deg,#FF6B45,#FF9270)", desc:"Куртаи гарм ва сабуки зимистонӣ бо матои обногузар, мувофиқ барои ҳарорати то -20°C. Андозаҳо аз M то XXL мавҷуданд."},
+    {tag:"Ошхона", cat:"Хӯрокворӣ", title:"Асали марғзорӣ, табиӣ — 1кг", rating:"5.0 · 89 шарҳ", price:"180 сомонӣ", old:null, seller:"«Занбӯри Кӯҳӣ»", av:"З", grad:"linear-gradient(150deg,#14B8A6,#5DD6C6)", desc:"Асали 100% табиӣ, ҷамъоварӣшуда аз минтақаҳои кӯҳии Тоҷикистон, бе иловаҳои шакар. Дар зарфи шишагии 1 килограммӣ."},
+    {tag:"Дафтар", cat:"Электроника", title:"Гӯшмонаки бесим бо ҳифзи садо", rating:"4.6 · 1.2K шарҳ", price:"420 сомонӣ", old:"499 сомонӣ", seller:"«ТехноБозор»", av:"Т", grad:"linear-gradient(150deg,#4F46E5,#8B84F2)", desc:"Гӯшмонаки бесими Bluetooth 5.3 бо ҳифзи фаъоли садо (ANC), давомнокии батарея то 30 соат ва зарфи шоҳинии заряддиҳӣ."},
+    {tag:"Хона", cat:"Гигиена ва зебоӣ", title:"Маҷмӯаи риши покиза, 5 порча", rating:"4.7 · 154 шарҳ", price:"95 сомонӣ", old:null, seller:"«Зебоии Ман»", av:"З", grad:"linear-gradient(150deg,#8B7CF6,#B7ACF9)", desc:"Маҷмӯаи пурраи ашёи гигиении рӯз бо иловаҳои табиӣ, барои пӯсти ҳассос мувофиқ."},
+    {tag:"Мактаб", cat:"Бозичаҳо", title:"Конструктори лего барои кӯдакон", rating:"4.9 · 342 шарҳ", price:"130 сомонӣ", old:"160 сомонӣ", seller:"«Дунёи Бозича»", av:"Д", grad:"linear-gradient(150deg,#FF6B45,#F5A524)", desc:"Конструктори бехатар аз пластики баландсифат, 250 порча, барои рушди тафаккури мантиқии кӯдакон аз 5 сола боло."},
+  ];
+
+  const grid = document.getElementById('productGrid');
+  let PRODUCTS = DEMO_PRODUCTS;
+
+  // Ранг/градиенти тасодуфӣ барои маҳсулоте, ки аз API меоянд (акси воқеӣ надоранд)
+  const CARD_GRADIENTS = [
+    "linear-gradient(150deg,#232C52,#3D4A85)", "linear-gradient(150deg,#FF6B45,#FF9270)",
+    "linear-gradient(150deg,#14B8A6,#5DD6C6)", "linear-gradient(150deg,#4F46E5,#8B84F2)",
+    "linear-gradient(150deg,#8B7CF6,#B7ACF9)",
+  ];
+
+  async function loadProducts(){
+    try{
+      const res = await fetch('/api/products?page=1&page_size=12');
+      if(!res.ok) throw new Error('API нодастрас');
+      const data = await res.json();
+      if(Array.isArray(data) && data.length){
+        PRODUCTS = data.map((p, i) => ({
+          tag: "", cat: "Маҳсулот", title: p.title, rating: `${p.avg_rating || 0} · ${p.ratings_count||0} шарҳ`,
+          price: `${p.price} сомонӣ`, old: null, seller: "Фурӯшанда", av: "Ф",
+          grad: CARD_GRADIENTS[i % CARD_GRADIENTS.length], desc: p.description || "",
+        }));
+      }
+    }catch(e){
+      // API дар дастрас нест (мас. дар пешнамоиши статикӣ) → маълумоти намунавӣ истифода мешавад
+      console.warn('Истифодаи маълумоти намунавӣ:', e.message);
+    }
+    renderProducts();
+  }
+
+  function renderProducts(){
+    grid.innerHTML = '';
+    PRODUCTS.forEach((p, i) => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.onclick = () => openProduct(i);
+    card.innerHTML = `
+      <div class="card-img" style="background:${p.grad};">
+        <span class="tag">${p.tag}</span>
+        <button class="fav" onclick="event.stopPropagation()" aria-label="Дӯстдошта">♡</button>
+      </div>
+      <div class="card-body">
+        <span class="card-cat">${p.cat}</span>
+        <div class="card-title">${p.title}</div>
+        <div class="card-rating">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 6.5 7 .8-5.2 4.8L18.2 21 12 17.3 5.8 21l1.4-6.9L2 8.3l7-.8L12 2Z"/></svg>
+          ${p.rating.split(' · ')[0]}
+        </div>
+        <div class="card-price-row">
+          <span><span class="card-price">${p.price}</span>${p.old ? `<span class="card-old-price">${p.old}</span>` : ''}</span>
+        </div>
+        <div class="card-footer">
+          <span class="seller"><span class="verified">✔</span> ${p.seller}</span>
+          <button class="chat-btn" onclick="event.stopPropagation();openChat('${p.seller.replace(/'/g,"")}','${p.av}')">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H8l-4 4V5a2 2 0 0 1 2-2h13a2 2 0 0 1 2 2z"/></svg>
+          </button>
+        </div>
+      </div>`;
+    grid.appendChild(card);
+    });
+  }
+  loadProducts();
+
+  function openProduct(i){
+    const p = PRODUCTS[i];
+    document.getElementById('pmodalImg').style.background = p.grad;
+    document.getElementById('pmodalCat').textContent = p.cat;
+    document.getElementById('pmodalTitle').textContent = p.title;
+    document.getElementById('pmodalRating').textContent = p.rating;
+    document.getElementById('pmodalPrice').textContent = p.price;
+    document.getElementById('pmodalOld').textContent = p.old || '';
+    document.getElementById('pmodalOld').style.display = p.old ? 'inline' : 'none';
+    document.getElementById('pmodalDesc').textContent = p.desc;
+    document.getElementById('pmodalSeller').innerHTML = p.seller + ' <span class="verified" style="color:var(--teal);">✔</span>';
+    document.getElementById('pmodalAv').textContent = p.av;
+    document.getElementById('pmodalOverlay').classList.add('show');
+  }
+  function closeProduct(){ document.getElementById('pmodalOverlay').classList.remove('show'); }
+
+  function openMenu(){ document.getElementById('menuDrawer').classList.add('open'); document.getElementById('menuOverlay').classList.add('show'); }
+  function closeMenu(){ document.getElementById('menuDrawer').classList.remove('open'); document.getElementById('menuOverlay').classList.remove('show'); }
+
+  function openChat(name, initial){
+    document.getElementById('chatName').textContent = name.startsWith('Фурӯш') ? name : 'Фурӯшгоҳи «' + name + '»';
+    document.getElementById('chatAvatar').textContent = initial;
+    document.getElementById('chatDrawer').classList.add('open');
+    document.getElementById('overlay').classList.add('show');
+  }
+  function closeChat(){
+    document.getElementById('chatDrawer').classList.remove('open');
+    document.getElementById('overlay').classList.remove('show');
+  }
+
+  document.querySelectorAll('.facet-row').forEach(row=>{
+    row.querySelectorAll('.chip').forEach(chip=>{
+      chip.addEventListener('click', (e)=>{
+        e.stopPropagation();
+        row.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
+        chip.classList.add('active');
+      });
+    });
+  });
+</script>
+
+</body>
+</html>
